@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+// Externals
+import PropTypes from 'prop-types';
+
+
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import { Modal } from '@material-ui/core';
@@ -16,79 +20,120 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import WarningIcon from '@material-ui/icons/Warning';
 import Badge from '@material-ui/core/Badge';
 import Calendar from './Calendar';
-import { key, specialObjective } from '../../../common/globals';
+import BaseRestaurante from './RestauranteBase'
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import {getData} from '../../../services/getData'
 import moment from 'moment'
 import 'moment/locale/es'
 moment.locale('es')
 
 
 let params = new URLSearchParams(location.search);
+var keyGet = String(params.get('token'))
 
-var objective = params.get('objective_id');
-var user = params.get('user')
-var keyGet = params.get('token')
-
-class Objective1 extends Component {
+class Base extends Component {
     constructor(props) {
         super(props)
-        this.handlePeriodClick = this.handlePeriodClick.bind(this)
+        var validKey=false
+        if(keyGet===process.env.REACT_APP_TOKEN){
+            validKey=true
+        }
+        //this.handlePeriodClick = this.handlePeriodClick.bind(this)
         this.state = {
-            refresh:500000
+            key:validKey,
+            value: 0,
+            load:true,
+            data:[]
         }
     }
     
-    
-
-    handlePeriodClick(stateCalendar){
-        this.setState({
-            dateStart:stateCalendar.dateRange.selection.startDate.toISOString().substring(0, 10),
-            finalDate:stateCalendar.dateRange.selection.endDate.toISOString().substring(0, 10),
-        })
-    }
 
     componentDidMount() {
-        this.refresh()
+        this.processData()
+    }
+
+    processData = () => {
+        getData().then(data=>{
+            data.sort(function (a, b) {
+                return (moment(b.date_closed) - moment(a.date_closed));
+            });
+            //console.log(data)
+            this.setState({
+                load:false,
+                data:data
+            })
+        })
         
     }
-
-
-    getDataFromAPI = () => {
-        const {dateStart, finalDate, user, objectiveMaster, keyGet}=this.state
-            this.processData('nullObjectiveMaster')
-    }
-
-    refresh(){
-        setInterval(
-            () => this.getDataFromAPI(),
-            this.state.interval
-        )
-        this.getDataFromAPI()
-    }
-
+    handleChange = (event, newValue) => {
+        this.setState({
+            value: newValue,
+        });
+    };
     
-    processData = (externalData) => {
-        this.state = {
-            load:true
-        }
-    }
     render() {
-
+        const {key, value, load, data}=this.state
+        if(key){
+            if(load){
+                return(<Grid container
+                direction="row"
+                justify="center"
+                alignItems="center">
+                    <Grid item lg={12} xl={12}>
+                        <Typography
+                        variant="h6"
+                        >
+                            <CircularProgress
+                            variant="indeterminate"
+                            size={20}
+                            thickness={3}
+                            
+                            />
+                        Cargando Informacion...
+                        </Typography>
+                    </Grid>
+                </Grid>)
+            }else{
+                return (
+                    <Grid container direction="row" justify="center" alignItems="center" spacing={1} key={1}>
+                        <AppBar position="static">
+                                <Tabs value={value} onChange={this.handleChange} aria-label="simple tabs example">
+                                    <Tab label="Resumen Ejecutivo" style={{paddingTop:"15px"}} />
+                                    <Tab label="Clientes" style={{paddingTop:"15px"}}/>
+                                    <Tab label="Ordenes" style={{paddingTop:"15px"}}/>
+                                </Tabs>
+                        </AppBar>
+                            { value == 0 ? 
+                                <BaseRestaurante data={data} />
+                            : value == 1 ?
+                                <div>sjkh</div>
+                            : value==2?
+                                <div>sjsdakh</div>
+                            :null }
+                    </Grid>
+                    
+                )
+            }
+            
+        }else{
             return (
                 <Grid container direction="row" justify="center" alignItems="center" spacing={3} key={1}>
-                    <Grid item>
+                    <Grid item item style={{textAlign:"right"}} xs={5} md={5} lg={5}>
                         <WarningIcon style={{color: "red"}}/>
                     </Grid>
-                    <Grid item>
+                    <Grid item item xs={7} md={7} lg={7}>
                         <Typography variant="h5">
-                            Debe ingresar user
+                            Debe ingresar Token
                         </Typography>
                     </Grid>
                 </Grid>
             )
-        
+        }
     }
 }
 
 
 
-export {Objective1}
+export {Base}

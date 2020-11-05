@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     },
     appBarShift: {
       marginLeft: drawerWidth,
-      width: `calc(100% - ${drawerWidth}px)`,
+      //width: `calc(100% - ${drawerWidth}px)`,
       transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
-      width: theme.spacing(7),
+      //width: theme.spacing(7),
       [theme.breakpoints.up('sm')]: {
         width: theme.spacing(9),
       },
@@ -69,7 +69,8 @@ const useStyles = makeStyles(theme => ({
       overflow: 'auto',
     },
     container: {
-      paddingTop: theme.spacing(4),
+      //paddingTop: theme.spacing(4),
+      maxWidth:"100%",
       paddingBottom: theme.spacing(4),
     },
     paper: {

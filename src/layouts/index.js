@@ -21,7 +21,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import Copyright from './components/Bottom'
 import {SideBarListItems}  from './components/SideBarListItems'
 import useStyles from './styles'
-import {Objective1, Objective2, Objective3} from './components/content/index'
+import {Base} from './components/content/index'
 
 
 export default function Dashboard() {
@@ -36,7 +36,6 @@ export default function Dashboard() {
 
   return (
     <div className={classes.root}>
-      <CssBaseline />
       <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
           <IconButton
@@ -51,40 +50,15 @@ export default function Dashboard() {
           <Typography component="h1" variant="h5" color="inherit" noWrap className={classes.title}>
             Dashboard Restaurante
           </Typography>
-          {/*<IconButton color="inherit">
-            <Badge badgeContent={1} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>*/}
         </Toolbar>
       </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-
-        <List>
-           {SideBarListItems}
-        </List>
-
-        <Divider />
-
-      </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
+        <Container className={classes.container}>
+          <Grid container spacing={1}>
             <Grid item xs={12} md={12} lg={12}>
               <Paper>
-              <Objective1 interval={10000}/>
+              <Base/>
               </Paper>
             </Grid>
           </Grid>
