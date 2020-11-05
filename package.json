@@ -1,0 +1,44 @@
+{
+  "name": "Restaurante",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.6.1",
+    "@material-ui/icons": "^4.5.1",
+    "classnames": "^2.2.6",
+    "clsx": "^1.0.4",
+    "date-fns": "^2.9.0",
+    "divider": "^0.1.1",
+    "grid": "^3.3.7",
+    "material-ui": "^0.20.2",
+    "modal": "^1.2.0",
+    "moment": "^2.24.0",
+    "package.json": "^2.0.1",
+    "react": "^16.12.0",
+    "react-calendar": "^2.19.2",
+    "react-d3-speedometer": "^0.8.0",
+    "react-date-range": "^1.0.0-beta",
+    "react-dom": "^16.12.0",
+    "react-perfect-scrollbar": "^1.5.3",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "0.9.5",
+    "react-spinners": "^0.8.0",
+    "react-trafficlight": "^5.1.2"
+  },
+  "devDependencies": {
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-react": "^7.16.0",
+    "prettier-eslint": "^9.0.1",
+    "prettier-eslint-cli": "^5.0.0",
+    "react-hot-loader": "^4.12.18"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  }
+}
