@@ -134,7 +134,7 @@ class Sales extends Component {
                 },
                 series: [
                     {
-                        name: "uptime", color: "#41B900", data: seriesSalesDays
+                        name: "venta", color: "#41B900", data: seriesSalesDays
                     },
                 ]
             },

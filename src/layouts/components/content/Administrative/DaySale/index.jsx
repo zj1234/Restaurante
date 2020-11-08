@@ -120,7 +120,7 @@ class DaySale extends Component {
                 },
                 series: [
                     {
-                        name: "", color: "#41B900", data: sortListDays
+                        name: "venta", color: "#41B900", data: sortListDays
                     },
                 ]
             },

@@ -125,7 +125,7 @@ class EmployeeProductive extends Component {
                                 { title: "Fecha", field: "date",defaultGroupOrder: 1 },
                                 { title: "Zona", field: "zone", defaultGroupOrder: 2},
                                 { title: "Tabla", field: "table"/*, type: "numeric"*/ },
-                                { title: "Total", field: "total"/*, type: "numeric"*/ },
+                                { title: "Total ($)", field: "total"/*, type: "numeric"*/ },
                                 
                             ]}
                             data={listData}
