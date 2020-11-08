@@ -1,10 +1,7 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 
 // Externals
-import classNames from 'classnames';
 import compose from 'recompose/compose';
-import PropTypes from 'prop-types';
-import IconButton from '@material-ui/core/IconButton';
 import Highcharts from 'highcharts/highstock'
 import HighchartsReact from 'highcharts-react-official'
 // Material helpers
@@ -13,7 +10,6 @@ import { withStyles } from '@material-ui/core/styles';
 
 // Material components
 import { Grid, Typography } from '@material-ui/core';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 // Shared components
 import PortletContent from '../../../../../components/PortletContent';
@@ -21,19 +17,17 @@ import PortletContent from '../../../../../components/PortletContent';
 // Component styles
 import styles from './styles';
 
-import moment, { isDate } from 'moment'
+import moment from 'moment'
 import 'moment/locale/es'  
 moment.locale('es')
 
 
-class Sales extends Component {
+class DaySale extends Component {
    
     constructor(props) {
         super(props);
         //console.log('sale', props.data, props.month)
         this.state = {
-            value:0,
-            typeGraph:0,
             data:this.props.data,
             chartOptions:{},
             load:true,
@@ -62,50 +56,42 @@ class Sales extends Component {
     }
 
     processData=()=>{
-        const {data, month}=this.state
-        //console.log('p, sales',data, month)
-        const groups = data.reduce((groups, game) => {
-            //console.log(String(game.date_closed).substring(0, 10))
-            const date = (String(game.date_closed).substring(0, 10));
+        const {data}=this.state
+        const groups = data.reduce((groups, values) => {
+            var date = (String(values.date_closed).substring(0, 10));
+            date=(moment(date).format('dddd'))
             if (!groups[date]) {
             groups[date] = [];
             }
-            groups[date].push(game);
+            groups[date].push(values);
             return groups;
         }, {});
-        var seriesDays=Object.keys(groups)
-        var seriesSalesDays=[]
-        var sumSale=0
-        var max=0
-        //console.log(seriesDays.length)
-        seriesDays.map(days=>{
-            //console.log(typeof(days))
-            var dataDay=groups[days]
-            //console.log(dataDay)
-            var salesDay=(dataDay.map(i=>i.total))
-            var totalSalesDay = salesDay.reduce((sum, value) => ( sum + value ), 0);
-            //console.log(parseInt(totalSalesDay))
-            sumSale+=totalSalesDay
-            if(totalSalesDay>max){
-                max=totalSalesDay
-            }
-            seriesSalesDays.push(parseInt(totalSalesDay))
+        //console.log(groups)
+        var days=(Object.keys(groups))
+        var serieAccummulateMonth=[]
+        days.map(day=>{
+            //console.log(day)
+            var sales=(groups[day].map(i=>i.total)).reduce((sum, value) => ( sum + value ), 0);
+            //console.log(sales)
+            serieAccummulateMonth.push({'day':day, 'venta':sales})
+
         })
-        var averageSaleDay=parseFloat((sumSale/seriesDays.length).toFixed(2))
-        averageSaleDay=(new Intl.NumberFormat("es-CL", {style: "currency", currency: "CLP"}).format(averageSaleDay))
-        max=parseFloat(max.toFixed(2))
-        max=(new Intl.NumberFormat("es-CL", {style: "currency", currency: "CLP"}).format(max))
+        serieAccummulateMonth.sort(function (a, b) {
+            return (moment(b.day) - moment(a.day));
+        });
+        var listDays=['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']
+        var sortListDays=(listDays.map(ele=>(serieAccummulateMonth.filter(i=>i.day===ele))[0]).map(ele=>(ele.venta)))
+        //console.log(sortListDays)
+        //console.log(listDays)
         this.setState({
-            average:averageSaleDay,
-            max:max,
             chartOptions: {
                 chart: {
                     type: 'column',
-                    width:1280
+                    width:600
                 },
-                title: 'VENTAS',
+                title: '',
                 xAxis: {
-                    categories: seriesDays,
+                    categories: listDays,
                     labels: {
                         rotation: -45,
                     },
@@ -134,7 +120,7 @@ class Sales extends Component {
                 },
                 series: [
                     {
-                        name: "uptime", color: "#41B900", data: seriesSalesDays
+                        name: "", color: "#41B900", data: sortListDays
                     },
                 ]
             },
@@ -143,9 +129,9 @@ class Sales extends Component {
     }
 
     render() {
-        const {load, chartOptions, average, max}=this.state
+        const {load, chartOptions}=this.state
         if(load){
-            return(<PortletContent>
+            return(<Grid  item xl={6} md={6} xs={6} lg={6}>
                     <Typography
                     variant="h6"
                     >
@@ -157,22 +143,19 @@ class Sales extends Component {
                         />
                     Cargando Informacion...
                     </Typography>
-                </PortletContent>)
+                </Grid>)
         }else{
             return (
-                <PortletContent>
+                <Grid  item xl={6} md={6} xs={6} lg={6}>
                     <Grid container spacing={1}>
-                        <Grid  item xl={12} md={12} xs={12} lg={12} style={{textAlign:"right", paddingRight:"200px"}}>
-                            <Typography style={{color:"#1976d2"}}>Promedio venta Mensual: {average}</Typography>
-                        </Grid>
-                        <Grid  item xl={12} md={12} xs={12} lg={12} style={{textAlign:"right", paddingRight:"200px"}}>
-                            <Typography style={{color:"#1976d2"}}>Mayor Venta:  {max}</Typography>
+                        <Grid  item xl={12} md={12} xs={12} lg={12}>
+                            <Typography variant="h4"  style={{color:"#616161"}}>Venta diaria acumulada</Typography>
                         </Grid>
                         <Grid  item xl={12} md={12} xs={12} lg={12}>
                             <FormattedChart chartOptions={chartOptions}/>
                         </Grid>
                     </Grid>
-                </PortletContent>
+                </Grid>
             );
         }
         
@@ -189,4 +172,4 @@ function FormattedChart(props) {
 
 export default compose(
     withStyles(styles)
-)(Sales);
+)(DaySale);

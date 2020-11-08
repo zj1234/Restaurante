@@ -1,26 +1,12 @@
 import React, { Component } from 'react';
-// Externals
-import PropTypes from 'prop-types';
 
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
-import { Modal } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import Popover from '@material-ui/core/Popover';
-import TrafficLight from 'react-trafficlight';
-import ReactSpeedometer from "react-d3-speedometer"
-import UpdateIcon from '@material-ui/icons/Update';
-import BounceLoader from "react-spinners/BounceLoader";
-import TimerIcon from '@material-ui/icons/Timer';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-import Button from '@material-ui/core/Button'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import WarningIcon from '@material-ui/icons/Warning';
-import Badge from '@material-ui/core/Badge';
-import Calendar from './Calendar';
 import BaseRestaurante from './RestauranteBase'
+import Administrative from './Administrative'
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -55,14 +41,24 @@ class Base extends Component {
     }
 
     processData = () => {
+        
         getData().then(data=>{
             data.sort(function (a, b) {
                 return (moment(b.date_closed) - moment(a.date_closed));
             });
-            //console.log(data)
+            const groups = data.reduce((groups, values) => {
+                var date = (String(values.date_closed).substring(0, 7));
+                date=(moment(date).format('MMMM'))
+                if (!groups[date]) {
+                groups[date] = [];
+                }
+                groups[date].push(values);
+                return groups;
+            }, {});
+            //console.log('de', groups)
             this.setState({
                 load:false,
-                data:data
+                dataMonth:groups
             })
         })
         
@@ -74,7 +70,7 @@ class Base extends Component {
     };
     
     render() {
-        const {key, value, load, data}=this.state
+        const {key, value, load, dataMonth}=this.state
         if(key){
             if(load){
                 return(<Grid container
@@ -100,17 +96,14 @@ class Base extends Component {
                     <Grid container direction="row" justify="center" alignItems="center" spacing={1} key={1}>
                         <AppBar position="static">
                                 <Tabs value={value} onChange={this.handleChange} aria-label="simple tabs example">
-                                    <Tab label="Resumen Ejecutivo" style={{paddingTop:"15px"}} />
-                                    <Tab label="Clientes" style={{paddingTop:"15px"}}/>
-                                    <Tab label="Ordenes" style={{paddingTop:"15px"}}/>
+                                    <Tab label="Resumen Comercial" style={{paddingTop:"15px"}} />
+                                    <Tab label="Resumen Administrativo" style={{paddingTop:"15px"}}/>
                                 </Tabs>
                         </AppBar>
                             { value == 0 ? 
-                                <BaseRestaurante data={data} />
+                                <BaseRestaurante data={dataMonth} />
                             : value == 1 ?
-                                <div>sjkh</div>
-                            : value==2?
-                                <div>sjsdakh</div>
+                                <Administrative data={dataMonth}/>
                             :null }
                     </Grid>
                     
