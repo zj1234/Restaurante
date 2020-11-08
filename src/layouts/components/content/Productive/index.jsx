@@ -17,20 +17,27 @@ import Popover from '@material-ui/core/Popover';
 // Shared components
 import Portlet from '../../../../components/Portlet';
 import PortletHeader from '../../../../components/PortletHeader';
+import PortletLabel from '../../../../components/PortletLabel';
+import PortletContent from '../../../../components/PortletContent';
+import PortletFooter from '../../../../components/PortletFooter';
+import PortletToolbar from '../../../../components/PortletToolbar';
+
 // Component styles
 import styles from './styles';
 
-import Sales from './Sales'
 import moment from 'moment'
 import 'moment/locale/es'  
+import EmployeeProductive from './EmployeeProductive';
 moment.locale('es')
 
 
-class BaseRestaurante extends Component {
+class Productive extends Component {
 
    
     constructor(props) {
         super(props);
+        //console.log('month',Object.keys(props.data))
+        //console.log('br', props.data)
 
         this.state = {
             valueMonth:0,
@@ -90,7 +97,7 @@ class BaseRestaurante extends Component {
     
     render() {
         const { months, valueMonth, open, anchor, dataMonth}=this.state
-        //console.log('r',months[valueMonth], dataMonth)
+        //console.log('a',months[valueMonth], dataMonth)
         dataMonth.sort(function (a, b) {
             return (moment(a.date_closed) - moment(b.date_closed));
         });
@@ -98,8 +105,8 @@ class BaseRestaurante extends Component {
             <Portlet style={{width:"100%"}}>
                 <PortletHeader >
                     <Grid container spacing={1}>
-                        <Grid item xl={12} md={12} xs={12} lg={12} style={{textAlign:"left", paddingTop:"50px"}}>
-                            <Typography variant="h4">Resumen de ventas {months[valueMonth]}
+                        <Grid item xl={12} md={12} xs={12} lg={12} style={{textAlign:"left", paddingTop:"20px"}}>
+                            <Typography variant="h4">Resumen Productivo {months[valueMonth]}
                                 <IconButton
                                     variant="text"
                                     onClick={this.handlePopMonths}
@@ -132,7 +139,12 @@ class BaseRestaurante extends Component {
                         </Popover>
                     </Grid>
                 </PortletHeader>
-                <Sales data={dataMonth} month={months[valueMonth]}/>
+                <PortletContent>
+                    <Grid container spacing={4}>
+                        <EmployeeProductive data={dataMonth} month={months[valueMonth]}/>  
+                    </Grid>
+                </PortletContent>
+                <PortletFooter></PortletFooter>
             </Portlet>
         );
     }
@@ -140,4 +152,4 @@ class BaseRestaurante extends Component {
 
 export default compose(
     withStyles(styles)
-)(BaseRestaurante);
+)(Productive);

@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 
-
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import WarningIcon from '@material-ui/icons/Warning';
 import BaseRestaurante from './RestauranteBase'
 import Administrative from './Administrative'
+import Productive from './Productive'
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -93,19 +94,22 @@ class Base extends Component {
                 </Grid>)
             }else{
                 return (
-                    <Grid container direction="row" justify="center" alignItems="center" spacing={1} key={1}>
-                        <AppBar position="static">
+                        <Grid container direction="row" justify="center" alignItems="center" spacing={1} key={1}>
+                            <AppBar position="static">
                                 <Tabs value={value} onChange={this.handleChange} aria-label="simple tabs example">
                                     <Tab label="Resumen Comercial" style={{paddingTop:"15px"}} />
                                     <Tab label="Resumen Administrativo" style={{paddingTop:"15px"}}/>
+                                    <Tab label="Resumen Productivo" style={{paddingTop:"15px"}}/>
                                 </Tabs>
-                        </AppBar>
-                            { value == 0 ? 
-                                <BaseRestaurante data={dataMonth} />
-                            : value == 1 ?
-                                <Administrative data={dataMonth}/>
-                            :null }
-                    </Grid>
+                            </AppBar>
+                                { value == 0 ? 
+                                    <BaseRestaurante data={dataMonth} />
+                                : value == 1 ?
+                                    <Administrative data={dataMonth}/>
+                                : value == 2 ?
+                                    <Productive data={dataMonth}/>
+                                :null}
+                        </Grid>
                     
                 )
             }
